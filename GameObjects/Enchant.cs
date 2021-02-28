@@ -6,6 +6,7 @@ using ItemInventoryManager.Managers;
 
 namespace ItemInventoryManager.GameObjects
 {
+    // This can be much better
     public static class Enchant
     {
         public static void Upgrade(IItem weapon)

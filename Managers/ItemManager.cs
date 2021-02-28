@@ -25,8 +25,7 @@ namespace ItemInventoryManager.Managers
 
         public static void Remove(IItem item)
         {
-            // Don't remove id 1 which is reveserved for no weapon
-            // Swap for no weapon
+            // Don't remove id 1 which is reveserved for "None" weapon item
             if (Game.Player.CurrentWeapon.ObjectId == item.ObjectId)
             {
                 Game.Player.EquipWeapon(GetItem<IItem>(0).ObjectId);

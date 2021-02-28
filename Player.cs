@@ -29,8 +29,6 @@ namespace ItemInventoryManager
                 var equippable = InventoryManager.GetSlot<ISlot>(slotObjectId).Item.FirstOrDefault(i => i is WeaponItem);
                 CurrentWeapon = (WeaponItem)equippable;
             }
-            
-
 
         }
 

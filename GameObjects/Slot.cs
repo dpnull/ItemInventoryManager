@@ -18,6 +18,7 @@ namespace ItemInventoryManager.GameObjects
             InventoryManager.AddSlot(this);
         }
 
+        // Probably deprecated
         public Slot(IItem item)
         {
             Item = new List<IItem>();

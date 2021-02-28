@@ -9,6 +9,9 @@ namespace ItemInventoryManager.Managers
 {
     public static class InventoryManager
     {
+        /*
+         * Missing checks for when inventory size limit is reached
+         */
         public const int DEFAULT_INVENTORY_SIZE = 10;
 
         public static int GetUniqueId()
@@ -28,12 +31,14 @@ namespace ItemInventoryManager.Managers
         {
             var freeSlot = SlotDatabase.Slots.FirstOrDefault(f => !f.Value.Item.Any());
 
+            // if true, get the first available slot.
             if (item.IsUnique)
             {
                 SlotDatabase.Slots[freeSlot.Key].Item.Add(item);
             }
             else
             {
+                // get the first slot with matching item name to passed item in the item list and add it.
                 if (SlotDatabase.Slots.Values.Any(i => i.Item.Any(j => j.Name == item.Name)))
                 {
                     foreach (var slot in SlotDatabase.Slots)
@@ -45,6 +50,7 @@ namespace ItemInventoryManager.Managers
                     }
                 } else
                 {
+                    // If no existing non-unique item in the slots exists, use up the next available slot.
                     if (freeSlot.Value.Item.All(i => i.Name != item.Name))
                     {
                         SlotDatabase.Slots[freeSlot.Key].Item.Add(item);
@@ -55,12 +61,14 @@ namespace ItemInventoryManager.Managers
 
         public static void CreateDefault()
         {
-            while(SlotDatabase.Slots.Count < DEFAULT_INVENTORY_SIZE)
+            // create the inventory
+            while (SlotDatabase.Slots.Count < DEFAULT_INVENTORY_SIZE)
             {
                 AddSlot(new Slot());
             }
         }
 
+        // Get an array of T based on the criteria passed, otherwise pass the exact array copy of dictionary.
         public static T[] GetSlots<T>(Func<T, bool> criteria = null) where T : ISlot
         {
             var collection = SlotDatabase.Slots.Values.ToArray().OfType<T>();
@@ -68,7 +76,7 @@ namespace ItemInventoryManager.Managers
             {
                 collection = collection.Where(criteria.Invoke);
             }
-            
+
 
             return collection.ToArray();
         }
@@ -76,7 +84,7 @@ namespace ItemInventoryManager.Managers
         public static T GetSlot<T>(int objectId) where T : ISlot
         {
             var collection = SlotDatabase.Slots.ToArray();
-            foreach(var item in collection)
+            foreach (var item in collection)
             {
                 return (T)SlotDatabase.Slots.Values.SingleOrDefault(i => i.ObjectId == objectId);
             }
@@ -86,14 +94,9 @@ namespace ItemInventoryManager.Managers
 
         public static void RemoveSlotItem(int objectId)
         {
-            // Not sure if necessary
-            // ItemManager.Remove(SlotDatabase.Slots.GetValueOrDefault(objectId).Item);
-
-            // Don't remove id 1 which is reveserved for no weapon
-            // Swap for no weapon
-
             var removable = SlotDatabase.Slots[objectId].Item.First();
             SlotDatabase.Slots[objectId].Item.Remove(removable);
+            // If the deleted weapon was equipped, change the player's weapon to "None"
             if (Game.Player.CurrentWeapon.ObjectId == objectId)
             {
                 Game.Player.CurrentWeapon = (ItemTypes.WeaponItem)ItemManager.GetItem<IItem>(0);
