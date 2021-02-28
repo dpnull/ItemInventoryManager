@@ -24,13 +24,14 @@ namespace ItemInventoryManager
 
         public void EquipWeapon(int slotObjectId)
         {
-            var slot = InventoryManager.GetSlot<ISlot>(slotObjectId);
-
-            if(slot.Item != null)
+            if (InventoryManager.GetSlot<ISlot>(slotObjectId).Item.Any())
             {
-                var equippable = slot.Item.FirstOrDefault(i => i is WeaponItem);
+                var equippable = InventoryManager.GetSlot<ISlot>(slotObjectId).Item.FirstOrDefault(i => i is WeaponItem);
                 CurrentWeapon = (WeaponItem)equippable;
             }
+            
+
+
         }
 
     }

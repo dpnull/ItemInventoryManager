@@ -33,21 +33,25 @@ namespace ItemInventoryManager.GameObjects
                 }
                 else
                 {
-                    if(item.Item.Any<IItem>(i => i.ObjectId == Game.Player.CurrentWeapon.ObjectId))
+                    if(item.Item != null)
                     {
-                        Console.WriteLine($"id: {item.Item.First().ObjectId}    [{item.Item.First().Name}]     - EQUIPPED -");
-                        bindable.Add(item);
+                        if (item.Item.Any<IItem>(i => i.ObjectId == Game.Player.CurrentWeapon.ObjectId))
+                        {
+                            Console.WriteLine($"id: {item.Item.First().ObjectId}    [{item.Item.First().Name}]     - EQUIPPED -");
+                            bindable.Add(item);
+                        }
+                        else if (item.Item.Any<IItem>(i => i.IsUnique))
+                        {
+                            Console.WriteLine($"id: {item.Item.First().ObjectId}    [{item.Item.First().Name}]");
+                            bindable.Add(item);
+                        }
+                        else if (item.Item.Any<IItem>(i => !i.IsUnique))
+                        {
+                            Console.WriteLine($"{item.Item.First().Name}    Quantity: {item.Item.Count}");
+                            bindable.Add(item);
+                        }
                     }
-                    else if (item.Item.Any<IItem>(i => i.IsUnique))
-                    {
-                        Console.WriteLine($"id: {item.Item.First().ObjectId}    [{item.Item.First().Name}]");
-                        bindable.Add(item);
-                    }
-                    else if(item.Item.Any<IItem>(i => !i.IsUnique))
-                    {
-                        Console.WriteLine($"{item.Item.First().Name}    Quantity: {item.Item.Count}");
-                        bindable.Add(item);
-                    }
+
                 }
                 Bindable = bindable;
             }

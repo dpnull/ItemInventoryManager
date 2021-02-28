@@ -13,6 +13,7 @@ namespace ItemInventoryManager
     class Game
     {
         public static Player Player;
+        public static char input;
 
         public Game()
         {
@@ -29,43 +30,38 @@ namespace ItemInventoryManager
         {
             while (c)
             {
-                Console.WriteLine("input:");
-                Console.WriteLine("1) Show inventory slots");
-                Console.WriteLine("2) Add item to inventory");
-                Console.WriteLine("3) Equip an item from inventory");
-                Console.WriteLine("4) Print currently equipped weapon");
-                Console.WriteLine("5) Remove item from inventory");
-                Console.WriteLine("6) Upgrade current weapon");
-                string input = Console.ReadLine();
-               
-                if (input == "1")
+                Console.WriteLine("|1| Show inventory |2| Add an item to inv |3| equip an item");
+                Console.WriteLine("|4| Show equipped  |5| Remove from inv    |6| upgrade weapon");
+
+                ConsoleKeyInfo getInput = Console.ReadKey(true);
+                input = getInput.KeyChar;
+
+                Console.Clear();
+
+                switch (input)
                 {
-                    Player.Inventory.DrawInventory();
+                    case '1':
+                        Player.Inventory.DrawInventory();
+                        break;
+                    case '2':
+                        AddItemToInventory();
+                        break;
+                    case '3':
+                        EquipItemFromInventory();
+                        break;
+                    case '4':
+                        PrintEquippedWeapon();
+                        break;
+                    case '5':
+                        RemoveItemFromInventory();
+                        break;
+                    case '6':
+                        UpgradeWeapon();
+                        break;
+                    default:
+                        break;
                 }
-                else if(input == "2")
-                {
-                    AddItemToInventory();
-                }
-                else if (input == "3")
-                {
-                    EquipItemFromInventory();
-                }
-                else if (input == "4")
-                {
-                    PrintEquippedWeapon();
-                }
-                else if (input == "5")
-                {
-                    RemoveItemFromInventory();
-                }
-                else if(input == "6")
-                {
-                    UpgradeWeapon();
-                }
-                else if (input == "c")
-                {
-                    Console.Clear();
-                }
+
             }
         }
 
@@ -73,18 +69,20 @@ namespace ItemInventoryManager
         {
             Console.WriteLine("Select item from inventory:");
             Player.Inventory.DrawInventory();
-            string input = Console.ReadLine();
+            ConsoleKeyInfo getInput = Console.ReadKey();
+            input = getInput.KeyChar;
 
-            Player.EquipWeapon(Int32.Parse(input));
+            Player.EquipWeapon(Int32.Parse(input.ToString()));
         }
 
         private void RemoveItemFromInventory()
         {
-            Console.WriteLine("Select item from inventory:");
+            Console.WriteLine("Select item from inventory:"); // THIS GOES NULL REMEMBER
             Player.Inventory.DrawInventory();
-            string input = Console.ReadLine();
+            ConsoleKeyInfo getInput = Console.ReadKey();
+            input = getInput.KeyChar;
 
-            InventoryManager.RemoveSlotItem(Player.Inventory.Bindable[int.Parse(input)].ObjectId);
+            InventoryManager.RemoveSlotItem(Player.Inventory.Bindable[Int32.Parse(input.ToString())].ObjectId);
         }
 
         private void PrintEquippedWeapon()
@@ -102,14 +100,19 @@ namespace ItemInventoryManager
         private void AddItemToInventory()
         {
             Console.WriteLine("1) for weapon, 2) for misc");
-            string input = Console.ReadLine();
-            
-            if (input == "1")
+            ConsoleKeyInfo getInput = Console.ReadKey();
+            input = getInput.KeyChar;
+
+            switch (input)
             {
-                InventoryManager.AddToInventory(WeaponItem.Axe());
-            } else if (input == "2")
-            {
-                InventoryManager.AddToInventory(MiscItem.Quartz());
+                case '1':
+                    InventoryManager.AddToInventory(WeaponItem.Axe());
+                    break;
+                case '2':
+                    InventoryManager.AddToInventory(MiscItem.Quartz());
+                    break;
+                default:
+                    break;
             }
         }
     }

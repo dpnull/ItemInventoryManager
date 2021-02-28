@@ -89,8 +89,15 @@ namespace ItemInventoryManager.Managers
             // Not sure if necessary
             // ItemManager.Remove(SlotDatabase.Slots.GetValueOrDefault(objectId).Item);
 
+            // Don't remove id 1 which is reveserved for no weapon
+            // Swap for no weapon
+
             var removable = SlotDatabase.Slots[objectId].Item.First();
             SlotDatabase.Slots[objectId].Item.Remove(removable);
+            if (Game.Player.CurrentWeapon.ObjectId == objectId)
+            {
+                Game.Player.CurrentWeapon = (ItemTypes.WeaponItem)ItemManager.GetItem<IItem>(0);
+            }
         }
 
         private static class SlotDatabase
